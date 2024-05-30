@@ -24,7 +24,7 @@ You are expected to write this software in Python, but you are allowed to reques
 - After cloning the repository. Create a branch called `task_1/[your name or nickname]` and when you are ready, push the branch. Do the same with tasks 2 and 3. **It is recommended to push all tasks after you complete all of them** in case you have some modifications you to do on previous tasks.
 - **It is recommended to create an experiments package** and conduct their scripts for trying things out before implementing them into your code structure.
 - **Do not use chatGPT or other language models for this challenge.** They often provide entire code segments that differ and influence your code design. There are plenty of resources online for multi-threading so you won't need to deal with that.
-- Read all tasks before you start. They are incremental.
+- **Read all tasks before you start. They are incremental.**
 - Upon submission, create a video that illustrates your monitor software besides Windows task manager graphs to prove you get the same graphs.
 
 ## Task 1: Create Service Class
