@@ -1,4 +1,7 @@
 import psutil
+import random
+
+from src.util.logger import logger
 
 
 class Components:
@@ -19,9 +22,10 @@ class Components:
                     'Total': f'{round(memory_info[0] / (1024 ** 3), 2)} GB',
                 }
             }
-        except Exception:
+        except Exception as e:
+            logger.exception(e)
             return {}
-    
+
     @staticmethod
     def get_cpu():
         try:
@@ -33,5 +37,21 @@ class Components:
                     'Usage': f'{cpu_info[0]}%'
                 }
             }
-        except Exception:
+        except Exception as e:
+            logger.exception(e)
+            return {}
+
+    @staticmethod
+    def get_random():
+        try:
+            random_info = (random.randint(0, 100),)
+
+            return {
+                'usage': random_info[0],
+                'info': {
+                    'Usage': f'{random_info[0]}%'
+                }
+            }
+        except Exception as e:
+            logger.exception(e)
             return {}

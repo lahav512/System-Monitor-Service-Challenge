@@ -24,7 +24,9 @@ class BaseMonitor:
 
             data = self.get_info()
             if (not self.shared_queue.full()) and len(data) > 0:
-                info = json.dumps({"unit": self.name, "data": data})
+                info = json.dumps(
+                    {'unit': self.name, 'data': data}
+                )
                 self.shared_queue.put(info)
 
             elapsed_time = time.time() - start_time

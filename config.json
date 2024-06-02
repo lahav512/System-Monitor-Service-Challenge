@@ -1,0 +1,8 @@
+{
+  "monitors": {
+    "CPU_MONITOR": true,
+    "MEM_MONITOR": true,
+    "RND_MONITOR": false
+  },
+  "debug": true
+}

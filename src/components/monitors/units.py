@@ -12,13 +12,21 @@ class MEMMonitor(BaseMonitor):
         super().__init__('Memory', Components.get_mem, shared_queue)
 
 
-class Monitors:
+class RNDMonitor(BaseMonitor):
+    def __init__(self, shared_queue):
+        super().__init__('Random', Components.get_random, shared_queue)
+
+
+class MonitorTypes:
     CPU_MONITOR = 1
     MEM_MONITOR = 2
+    RND_MONITOR = 3
 
     @staticmethod
-    def get_monitor_unit(monitor):
-        if monitor == Monitors.CPU_MONITOR:
+    def get_monitor_from_type(monitor):
+        if monitor == MonitorTypes.CPU_MONITOR:
             return CPUMonitor
-        elif monitor == Monitors.MEM_MONITOR:
+        elif monitor == MonitorTypes.MEM_MONITOR:
             return MEMMonitor
+        elif monitor == MonitorTypes.RND_MONITOR:
+            return RNDMonitor

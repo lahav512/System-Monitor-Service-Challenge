@@ -2,7 +2,7 @@
 import threading
 import queue
 
-from src.components.monitors.units import Monitors
+from src.components.monitors.units import MonitorTypes
 
 
 class _MonitorManager:
@@ -26,8 +26,6 @@ class _MonitorManager:
     def initialize(self):
         self.shared_queue = queue.Queue(maxsize=len(self.monitors))
         self.monitors = [m(self.shared_queue) for m in self.monitors]
-
-        print(self.monitors)
 
         self._initialized = True
     
@@ -58,10 +56,10 @@ class MonitorManagerBuilder:
     def __init__(self):
         self.manager = _MonitorManager()
 
-    def add_monitor(self, monitor):
-        monitor_unit = Monitors.get_monitor_unit(monitor)
-        if monitor_unit:
-            self.manager.add_monitor(monitor_unit)
+    def add_monitor(self, monitor_type):
+        monitor = MonitorTypes.get_monitor_from_type(monitor_type)
+        if monitor:
+            self.manager.add_monitor(monitor)
         return self
 
     def build(self):
