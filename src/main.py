@@ -1,13 +1,18 @@
-import time
-from src.manager import ManagerBuilder, Monitors
+from src.manager import MonitorManagerBuilder, Monitors
+from src.components.receiver import UIReceiver
 
-builder = ManagerBuilder()
-manager = builder.add_monitor(Monitors.CPU_MONITOR).add_monitor(Monitors.MEM_MONITOR).build()
+builder = MonitorManagerBuilder()
+monitor_manager, shared_queue, monitor_count = builder.add_monitor(
+    Monitors.CPU_MONITOR).add_monitor(
+    Monitors.MEM_MONITOR).build()
+ui = UIReceiver(shared_queue, monitor_count)
 
 try:
-    manager.start()
-    time.sleep(5)
-    manager.stop()
+    monitor_manager.start()
+    ui.start()  # blocking
+    print("Exiting...")
+    monitor_manager.stop()
+
 except KeyboardInterrupt:
     print("Exiting...")
-    manager.stop()
+    monitor_manager.stop()

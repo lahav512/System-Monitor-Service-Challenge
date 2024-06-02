@@ -1,14 +1,15 @@
-from ._base import BaseMonitor
+from src.components.monitors._base import BaseMonitor
 from src.util.component_info import Components
+
 
 class CPUMonitor(BaseMonitor):
     def __init__(self, shared_queue):
-        super().__init__('cpu', Components.get_cpu, shared_queue)
+        super().__init__('CPU', Components.get_cpu, shared_queue)
 
 
 class MEMMonitor(BaseMonitor):
     def __init__(self, shared_queue):
-        super().__init__('mem', Components.get_mem, shared_queue)
+        super().__init__('Memory', Components.get_mem, shared_queue)
 
 
 class Monitors:

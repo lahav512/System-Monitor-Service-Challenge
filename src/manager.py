@@ -3,20 +3,16 @@ import threading
 import queue
 
 from src.components.monitors.units import Monitors
-from src.components.receiver import Receiver
 
 
-class _Manager:
+class _MonitorManager:
     """
-    Manager class responsible for initializing, starting & stopping receiver and montior threads
+    Manager class responsible for initializing, starting & stopping and monitor threads
     """
     def __init__(self):
         self.monitors = []
-        self.receiver = None
-        self.shared_queue = None
-
         self.monitor_threads = []
-        self.receiver_thread = None
+        self.shared_queue = None
 
         self._running = False
         self._initialized = False
@@ -28,12 +24,10 @@ class _Manager:
         return len(self.monitors)
     
     def initialize(self):
-        self.shared_queue = queue.Queue(maxsize=len(self.monitors)*3)
-        self.receiver = Receiver(self.shared_queue, len(self.monitors))
+        self.shared_queue = queue.Queue(maxsize=len(self.monitors))
         self.monitors = [m(self.shared_queue) for m in self.monitors]
 
         print(self.monitors)
-        print(self.receiver)
 
         self._initialized = True
     
@@ -41,7 +35,6 @@ class _Manager:
         self.monitor_threads.clear()
         for monitor in self.monitors:
             self.monitor_threads.append(threading.Thread(target=monitor.monitor))
-        self.receiver_thread = threading.Thread(target=self.receiver.start)
     
     def start(self):
         if not self._running and self._initialized:
@@ -50,23 +43,20 @@ class _Manager:
 
             for mt in self.monitor_threads:
                 mt.start()
-            self.receiver_thread.start()
       
     def stop(self):
         for m in self.monitors:
             m.stop()
-        self.receiver.stop()
 
         for mt in self.monitor_threads:
             mt.join()
-        self.receiver_thread.join()
 
         self._running = False
 
 
-class ManagerBuilder:
+class MonitorManagerBuilder:
     def __init__(self):
-        self.manager = _Manager()
+        self.manager = _MonitorManager()
 
     def add_monitor(self, monitor):
         monitor_unit = Monitors.get_monitor_unit(monitor)
@@ -76,4 +66,4 @@ class ManagerBuilder:
 
     def build(self):
         self.manager.initialize()
-        return self.manager
+        return self.manager, self.manager.shared_queue, self.manager.monitor_count()
