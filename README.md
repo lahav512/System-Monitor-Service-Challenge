@@ -8,7 +8,7 @@ It is recommended to write your action plan in some rich text file (like *.md or
 When designing the code using OOP, it is suggested to start with writing an example script of the main file that uses the classes before starting to write the classes and designing the architecture of your code.
 For each task, you are required to implement a flow chart (see empty files within the `flowcharts` folder). The flowcharts should be created using the opensource [DrawIO](https://app.diagrams.net/) web app and they should illustrate the architecture of the service as a generic class and the flow of each specific implementation of the service and the interaction between them (it is fine if flowcharts of two tasks are almost the same). The flowcharts should be expressive enough but don't write every small function or every variable. It should be used for visually reading and understanding the architecture you chose to apply. The specific implementation of functional functions is irrelevant to the flowchart.
 
-You are expected to write this software in Python, but you are allowed to request a different programming language for your choice.
+You are expected to write this software in Python, but you are allowed to request a different programming language of your choice.
 
 ## Code evaluation
 - Project structure (don't write everything in a single file, you have an entire branch for yourself)
@@ -21,9 +21,10 @@ You are expected to write this software in Python, but you are allowed to reques
 - The flowchart is expressive enough to demonstrate the actual structure of your code (if you are not sure if your flowcharts are expressive enough, you can ask)
 
 ## Important instructions
-- After cloning the repository. Create a branch called `task_1/[your name or nickname]` and when you are ready, push the branch. Do the same with tasks 2 and 3. **It is recommended to push all tasks after you complete all of them** in case you have some modifications you to do on previous tasks.
-- **It is recommended to create an experiments package** and conduct their scripts for trying things out before implementing them into your code structure.
-- **Do not use chatGPT or other language models for this challenge.** They often provide entire code segments that differ and influence your code design. There are plenty of resources online for multi-threading so you won't need to deal with that.
+- Fork and then clone the repository.
+- After cloning the repository. Create a branch called `task_1` and when you are ready, push the branch. Do the same with tasks 2 and 3. **It is recommended to push all tasks after you complete all of them** in case you have some modifications to do on previous tasks.
+- **It is recommended to create an experiments directory** and run your experimental scripts from there for trying things out before implementing them into your code structure.
+- **Do not use chatGPT or other AI models for this challenge.** They often provide entire code segments that differ and influence your code design. There are plenty of resources online for multi-threading so you won't need to deal with that.
 - **Read all tasks before you start. They are incremental.**
 - Upon submission, create a video that illustrates your monitor software besides Windows task manager graphs to prove you get the same graphs.
 
@@ -69,7 +70,7 @@ The user can specify in a configuration file (true or false) for each system inf
 This challenge is designed to test your independence. You are more than welcome to ask questions for clarifications but you should also use your expertise and make decisions based on coding practices and common sense of the expected result and user experience of using the software.
 
 ## Food for thought
-This software could be done without creating service architecture. Think why is essential to still choose such architecture for this program. How would it affect adding more complex features for such a monitor?
+This software could be done without creating service architecture. Think why it is essential to still choose such architecture for this program. How would it affect adding more complex features for such a monitor?
 Remember, when we are building software, we think about what we need now, what we will probably need in the future, and how other programmers will be able to easily contribute to the software and add more features without having to dive into the internals of your code for every simple feature.
 
 **Good luck!**
