@@ -1,0 +1,27 @@
+# Bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+.env/
+venv/
+env/
+
+# Environment files
+*.env
+*.env.*
+
+
+# uv cache and lock
+.uv/
+.uv-cache/
+uv.lock
+
+
+# Editors / OS filess
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
