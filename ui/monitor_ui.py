@@ -24,7 +24,7 @@ class MonitorUI(QtWidgets.QWidget):
             layout.addWidget(plot)
             self.plots[name] = plot
             self.curves[name] = plot.plot(pen=pg.mkPen(width=2))
-
+        #Update graphs every second
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.update_plot)
         self.timer.start(1000)
@@ -37,6 +37,7 @@ class MonitorUI(QtWidgets.QWidget):
         }
         return [name for name, enabled in mapping.items() if enabled]
 
+    #Pull all queued data points into self.metrics and self.times
     def _drain(self):
         got = False
         while not self.queue.empty():
@@ -63,6 +64,7 @@ class MonitorUI(QtWidgets.QWidget):
 
         return got
 
+    #Update all graphs with latest data from the queue
     def update_plot(self):
         if self._drain():
             x0 = self.times[-1]
@@ -72,6 +74,7 @@ class MonitorUI(QtWidgets.QWidget):
                 if self.metrics[title]:
                     self.plots[title].setTitle(f"{title[:-3]} ({self.metrics[title][-1]:.1f}%)")
 
+    # Show the UI with size based on number of enabled metrics
     def run(self):
         self.setWindowTitle("System Monitor")
         self.resize(800, 300 * max(1, len(self.metrics)))
