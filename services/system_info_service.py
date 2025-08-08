@@ -12,11 +12,14 @@ class SystemInfoService(BaseService):
 
     def run(self):
         while not self._stop_event.is_set():
-            data = {
-                "timestamp": time.time(),
-                "cpu_percent": psutil.cpu_percent(),
-                "ram_percent": psutil.virtual_memory().percent,
-            }
+            data = {"timestamp": time.time()}
+
+            if Config.SHOW_CPU:
+                data["cpu_percent"] = psutil.cpu_percent()
+            if Config.SHOW_RAM:
+                data["ram_percent"] = psutil.virtual_memory().percent
+            if Config.SHOW_DISK:
+                data["disk_percent"] = psutil.disk_usage('C:/').percent
             for q in self.queue:
                 q.put(json.dumps(data))
             time.sleep(Config.CYCLE_DURATION)

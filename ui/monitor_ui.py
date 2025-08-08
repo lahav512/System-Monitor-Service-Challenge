@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets, QtCore
 import pyqtgraph as pg
 import json
-import time
+from services.config import Config
 
 
 class MonitorUI(QtWidgets.QWidget):
@@ -9,49 +9,70 @@ class MonitorUI(QtWidgets.QWidget):
         super().__init__()
         self.queue = queue
         self.history_len = history_len
-        self.times, self.cpu, self.ram = [], [], []
+
+        self.times = []
+        self.metrics = {name: [] for name in self._enabled_metrics()}
+        self.curves = {}
+        self.plots = {}
 
         layout = QtWidgets.QVBoxLayout(self)
-        self.plot_cpu = pg.PlotWidget(title="CPU Usage (%)")
-        self.plot_ram = pg.PlotWidget(title="RAM Usage (%)")
-        layout.addWidget(self.plot_cpu)
-        layout.addWidget(self.plot_ram)
 
-        self.curve_cpu = self.plot_cpu.plot(pen=pg.mkPen(width=2))
-        self.curve_ram = self.plot_ram.plot(pen=pg.mkPen(width=2))
-        self.plot_cpu.setYRange(0, 100)
-        self.plot_ram.setYRange(0, 100)
+        # Create one plot per enabled metric
+        for name in self.metrics:
+            plot = pg.PlotWidget(title=name)
+            plot.setYRange(0, 100)
+            layout.addWidget(plot)
+            self.plots[name] = plot
+            self.curves[name] = plot.plot(pen=pg.mkPen(width=2))
 
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.update_plot)
         self.timer.start(1000)
+
+    def _enabled_metrics(self):
+        mapping = {
+            "CPU Usage (%)": Config.SHOW_CPU,
+            "Memory Usage (%)": Config.SHOW_RAM,
+            "Disk Usage (%)": Config.SHOW_DISK,
+        }
+        return [name for name, enabled in mapping.items() if enabled]
 
     def _drain(self):
         got = False
         while not self.queue.empty():
             data = json.loads(self.queue.get())
             self.times.append(int(data["timestamp"]))
-            self.cpu.append(data["cpu_percent"])
-            self.ram.append(data["ram_percent"])
+
+            # Map plot titles to json keys
+            key_map = {
+                "CPU Usage (%)": "cpu_percent",
+                "Memory Usage (%)": "ram_percent",
+                "Disk Usage (%)": "disk_percent",
+            }
+            for title in self.metrics:
+                key = key_map[title]
+                self.metrics[title].append(data.get(key, 0))
+
             got = True
+
+        # Keep fixed history length
         if len(self.times) > self.history_len:
             self.times = self.times[-self.history_len:]
-            self.cpu = self.cpu[-self.history_len:]
-            self.ram = self.ram[-self.history_len:]
+            for k in self.metrics:
+                self.metrics[k] = self.metrics[k][-self.history_len:]
+
         return got
 
     def update_plot(self):
         if self._drain():
             x0 = self.times[-1]
             xs = [t - (x0 - self.history_len) for t in self.times]
-            self.curve_cpu.setData(xs, self.cpu)
-            self.curve_ram.setData(xs, self.ram)
-            if self.cpu:
-                self.plot_cpu.setTitle(f"CPU Usage ({self.cpu[-1]:.1f}%)")
-            if self.ram:
-                self.plot_ram.setTitle(f"RAM Usage ({self.ram[-1]:.1f}%)")
+            for title, curve in self.curves.items():
+                curve.setData(xs, self.metrics[title])
+                if self.metrics[title]:
+                    self.plots[title].setTitle(f"{title[:-3]} ({self.metrics[title][-1]:.1f}%)")
 
     def run(self):
         self.setWindowTitle("System Monitor")
-        self.resize(800, 1000)
+        self.resize(800, 300 * max(1, len(self.metrics)))
         self.show()

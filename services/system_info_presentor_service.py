@@ -14,7 +14,16 @@ class SystemInfoPresentorService(BaseService):
             try:
                 data_json = self.queue.get(timeout=1)
                 data = json.loads(data_json)
-                print(f"Timestamp: {data['timestamp']}, CPU: {data['cpu_percent']}%, RAM: {data['ram_percent']}%")
+
+                parts = [f"Timestamp: {data.get('timestamp', 0)}"]
+                if 'cpu_percent' in data:
+                    parts.append(f"CPU: {data['cpu_percent']}%")
+                if 'ram_percent' in data:
+                    parts.append(f"RAM: {data['ram_percent']}%")
+                if 'disk_percent' in data:
+                    parts.append(f"Disk: {data['disk_percent']}%")
+
+                print(", ".join(parts))
                 time.sleep(Config.CYCLE_DURATION)
-            except Exception as e:
+            except Exception:
                 continue
