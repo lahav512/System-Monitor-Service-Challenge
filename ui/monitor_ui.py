@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets, QtCore
 import pyqtgraph as pg
 import json
-from services.config import Config
+from services.config import config
 
 
 class MonitorUI(QtWidgets.QWidget):
@@ -11,52 +11,38 @@ class MonitorUI(QtWidgets.QWidget):
         self.history_len = history_len
 
         self.times = []
-        self.metrics = {name: [] for name in self._enabled_metrics()}
+        self.metrics = {m.display_name: [] for m in config.METRICS if m.enabled}
+        self.metric_configs = {m.display_name: m for m in config.METRICS if m.enabled}
+
         self.curves = {}
         self.plots = {}
 
         layout = QtWidgets.QVBoxLayout(self)
 
-        # Create one plot per enabled metric
+        # Create one plot per enabled metric from the config
         for name in self.metrics:
-            plot = pg.PlotWidget(title=name)
+            plot = pg.PlotWidget(title=f"{name} ({self.metric_configs[name].unit})")
             plot.setYRange(0, 100)
             layout.addWidget(plot)
             self.plots[name] = plot
             self.curves[name] = plot.plot(pen=pg.mkPen(width=2))
-        #Update graphs every second
+
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.update_plot)
         self.timer.start(1000)
 
-    def _enabled_metrics(self):
-        mapping = {
-            "CPU Usage (%)": Config.SHOW_CPU,
-            "Memory Usage (%)": Config.SHOW_RAM,
-            "Disk Usage (%)": Config.SHOW_DISK,
-        }
-        return [name for name, enabled in mapping.items() if enabled]
-
-    #Pull all queued data points into self.metrics and self.times
     def _drain(self):
         got = False
         while not self.queue.empty():
             data = json.loads(self.queue.get())
-            self.times.append(int(data["timestamp"]))
+            self.times.append(data["timestamp"])
 
-            # Map plot titles to json keys
-            key_map = {
-                "CPU Usage (%)": "cpu_percent",
-                "Memory Usage (%)": "ram_percent",
-                "Disk Usage (%)": "disk_percent",
-            }
-            for title in self.metrics:
-                key = key_map[title]
-                self.metrics[title].append(data.get(key, 0))
+            for display_name, metric_config in self.metric_configs.items():
+                key = metric_config.json_key
+                self.metrics[display_name].append(data.get(key, 0))
 
             got = True
 
-        # Keep fixed history length
         if len(self.times) > self.history_len:
             self.times = self.times[-self.history_len:]
             for k in self.metrics:
@@ -64,15 +50,20 @@ class MonitorUI(QtWidgets.QWidget):
 
         return got
 
-    #Update all graphs with latest data from the queue
+    # Update all graphs with latest data from the queue
     def update_plot(self):
         if self._drain():
             x0 = self.times[-1]
             xs = [t - (x0 - self.history_len) for t in self.times]
-            for title, curve in self.curves.items():
-                curve.setData(xs, self.metrics[title])
-                if self.metrics[title]:
-                    self.plots[title].setTitle(f"{title[:-3]} ({self.metrics[title][-1]:.1f}%)")
+
+            for display_name, curve in self.curves.items():
+                unit = self.metric_configs[display_name].unit
+                current_value = self.metrics[display_name][-1]
+                curve.setData(xs, self.metrics[display_name])
+                if unit == "%":
+                    self.plots[display_name].setTitle(f"{display_name} ({current_value:.1f}%)")
+                else:
+                    self.plots[display_name].setTitle(f"{display_name} ({current_value:.1f} {unit})")
 
     # Show the UI with size based on number of enabled metrics
     def run(self):
