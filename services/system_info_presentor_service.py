@@ -1,7 +1,7 @@
 import json
 import time
 from services.base_service import BaseService
-from services.config import Config
+from services.config import config
 
 
 class SystemInfoPresentorService(BaseService):
@@ -24,6 +24,6 @@ class SystemInfoPresentorService(BaseService):
                     parts.append(f"Disk: {data['disk_percent']}%")
 
                 print(", ".join(parts))
-                time.sleep(Config.CYCLE_DURATION)
+                time.sleep(config.CYCLE_DURATION)
             except Exception:
                 continue
