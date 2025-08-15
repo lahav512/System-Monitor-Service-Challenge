@@ -1,1 +1,121 @@
-
+<mxfile host="drawio-plugin" modified="2025-08-15T14:37:53.497Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" version="22.1.22" etag="EpLkVeWJrpdwznj46qSy" type="embed" pages="2">
+  <diagram name="Architecture" id="0">
+    <mxGraphModel dx="522" dy="285" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="1" />
+        <mxCell id="2" parent="1" />
+        <mxCell id="3" value="BaseService" style="shape=rectangle;whiteSpace=wrap;rounded=1;" parent="2" vertex="1">
+          <mxGeometry x="40" y="20" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="SysInfoSvc" style="shape=rectangle;whiteSpace=wrap;rounded=1;" parent="3" vertex="1">
+          <mxGeometry x="30" y="90" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="PresenterSvc" style="shape=rectangle;whiteSpace=wrap;rounded=1;" parent="4" vertex="1">
+          <mxGeometry x="220" y="80" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="UI" style="shape=rectangle;whiteSpace=wrap;rounded=1;" parent="5" vertex="1">
+          <mxGeometry x="420" y="90" width="90" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="Config/Metrics" style="shape=rectangle;whiteSpace=wrap;rounded=1;" parent="6" vertex="1">
+          <mxGeometry x="40" y="160" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="8" value="Collectors" style="shape=rectangle;whiteSpace=wrap;rounded=1;" parent="7" vertex="1">
+          <mxGeometry x="240" y="150" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="Q: UI data" style="shape=rectangle;whiteSpace=wrap;rounded=1;" parent="8" vertex="1">
+          <mxGeometry x="420" y="150" width="100" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="10" value="Q: Presenter" style="shape=rectangle;whiteSpace=wrap;rounded=1;" parent="9" vertex="1">
+          <mxGeometry x="540" y="140" width="110" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="extends" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;" parent="10" source="3" target="4" edge="1">
+          <mxGeometry as="geometry" />
+        </mxCell>
+        <mxCell id="12" value="extends" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;" parent="11" source="3" target="5" edge="1">
+          <mxGeometry as="geometry" />
+        </mxCell>
+        <mxCell id="13" value="reads from" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;" parent="12" source="4" target="7" edge="1">
+          <mxGeometry as="geometry">
+            <mxPoint x="45" y="-105" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="14" value="uses" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;" parent="13" source="7" target="8" edge="1">
+          <mxGeometry as="geometry" />
+        </mxCell>
+        <mxCell id="15" value="puts to" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;" parent="14" source="4" target="9" edge="1">
+          <mxGeometry as="geometry">
+            <mxPoint x="15" y="-5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="Runtime Flow" id="1">
+    <mxGraphModel>
+      <root>
+        <mxCell id="19" />
+        <mxCell id="20" parent="19" />
+        <mxCell id="21" value="Start" style="shape=rectangle;whiteSpace=wrap;rounded=1;" vertex="1" parent="20">
+          <mxGeometry x="60" y="20" width="90" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="22" value="Init config + queues" style="shape=rectangle;whiteSpace=wrap;rounded=1;" vertex="1" parent="21">
+          <mxGeometry x="40" y="70" width="160" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="23" value="Start services + UI" style="shape=rectangle;whiteSpace=wrap;rounded=1;" vertex="1" parent="22">
+          <mxGeometry x="30" y="120" width="170" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="24" value="Loop" style="shape=rectangle;whiteSpace=wrap;rounded=1;" vertex="1" parent="23">
+          <mxGeometry x="90" y="170" width="80" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="25" value="Collect metrics" style="shape=rectangle;whiteSpace=wrap;rounded=1;" vertex="1" parent="24">
+          <mxGeometry x="270" y="160" width="150" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="26" value="Build JSON" style="shape=rectangle;whiteSpace=wrap;rounded=1;" vertex="1" parent="25">
+          <mxGeometry x="270" y="205" width="150" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="27" value="Send to Qs" style="shape=rectangle;whiteSpace=wrap;rounded=1;" vertex="1" parent="26">
+          <mxGeometry x="270" y="250" width="150" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="28" value="Sleep" style="shape=rectangle;whiteSpace=wrap;rounded=1;" vertex="1" parent="27">
+          <mxGeometry x="270" y="295" width="150" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="29" value="Stop all" style="shape=rectangle;whiteSpace=wrap;rounded=1;" vertex="1" parent="28">
+          <mxGeometry x="60" y="230" width="120" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="30" value="End" style="shape=rectangle;whiteSpace=wrap;rounded=1;" vertex="1" parent="29">
+          <mxGeometry x="60" y="280" width="90" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="31" value="begin" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="30" source="21" target="22">
+          <mxGeometry as="geometry" />
+        </mxCell>
+        <mxCell id="32" value="setup" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="31" source="22" target="23">
+          <mxGeometry as="geometry" />
+        </mxCell>
+        <mxCell id="33" value="start loop" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="32" source="23" target="24">
+          <mxGeometry as="geometry" />
+        </mxCell>
+        <mxCell id="34" value="do work" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="33" source="24" target="25">
+          <mxGeometry as="geometry" />
+        </mxCell>
+        <mxCell id="35" value="process" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="34" source="25" target="26">
+          <mxGeometry as="geometry" />
+        </mxCell>
+        <mxCell id="36" value="output" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="35" source="26" target="27">
+          <mxGeometry as="geometry" />
+        </mxCell>
+        <mxCell id="37" value="wait" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="36" source="27" target="28">
+          <mxGeometry as="geometry" />
+        </mxCell>
+        <mxCell id="38" value="repeat" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="37" source="28" target="24">
+          <mxGeometry as="geometry" />
+        </mxCell>
+        <mxCell id="39" value="on close" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="38" source="24" target="29">
+          <mxGeometry as="geometry" />
+        </mxCell>
+        <mxCell id="40" value="finish" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="39" source="29" target="30">
+          <mxGeometry as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
