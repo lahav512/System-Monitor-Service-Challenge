@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from typing import List
 from utils.system_info_collectors_utils import (
     MetricCollector,
     CpuPercentCollector,
@@ -20,7 +19,7 @@ class Metric:
 @dataclass
 class Config:
     CYCLE_DURATION: int = 1
-    METRICS: List[Metric] = field(default_factory=lambda: [
+    METRICS: list[Metric] = field(default_factory=lambda: [
         Metric(
             display_name="CPU Usage",
             json_key="cpu_percent",
