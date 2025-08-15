@@ -2,7 +2,7 @@ import json
 import time
 from services.base_service import BaseService
 from services.config import config
-
+from utils.presentor_utils import format_system_info
 
 class SystemInfoPresentorService(BaseService):
     def __init__(self, queue):
@@ -14,16 +14,8 @@ class SystemInfoPresentorService(BaseService):
             try:
                 data_json = self.queue.get(timeout=1)
                 data = json.loads(data_json)
-
-                parts = [f"Timestamp: {data.get('timestamp', 0)}"]
-                if 'cpu_percent' in data:
-                    parts.append(f"CPU: {data['cpu_percent']}%")
-                if 'ram_percent' in data:
-                    parts.append(f"RAM: {data['ram_percent']}%")
-                if 'disk_percent' in data:
-                    parts.append(f"Disk: {data['disk_percent']}%")
-
-                print(", ".join(parts))
+                output = format_system_info(data)
+                print(output)
                 time.sleep(config.CYCLE_DURATION)
             except Exception:
                 continue
